@@ -73,8 +73,9 @@ describe "Dex", =>
       it "returns all elements that match the selector", =>
         expect(@dex.all("li").length).to.equal(3)
 
-      it "returns an empty array if no element matches the selector", =>
-        expect(@dex.all("foo")).to.eql([])
+      it "returns an empty jQuery result object if no element matches the selector", =>
+        expect(@dex.all("foo").each).to.not.equal(null)
+        expect(@dex.all("foo").length).to.equal(0)
 
       it "returns an empty array for invalid selectors", =>
         expect(@dex.all("..invalid")).to.eql([])

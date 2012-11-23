@@ -21,11 +21,7 @@ class @Dex
 
   all: (selector) =>
     try
-      elements = @$(selector)
-      if elements.length > 0
-        elements
-      else
-        []
+      @$(selector)
     catch err
       []
 
