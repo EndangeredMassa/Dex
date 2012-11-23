@@ -72,6 +72,9 @@ describe "Dex", =>
       it "returns an empty array if no element matches the selector", =>
         expect(@dex.all("foo")).to.eql([])
 
+      it "returns an empty array for invalid selectors", =>
+        expect(@dex.all("..invalid")).to.eql([])
+
     describe "#first", =>
       it "returns the first element that matches the selector", =>
         expect(@dex.first("li").text()).to.equal("Item #1")

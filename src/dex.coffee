@@ -17,10 +17,13 @@ class @Dex
           cb(null, @)
 
   all: (selector) =>
-    elements = @$(selector)
-    if elements.length > 0
-      elements
-    else
+    try
+      elements = @$(selector)
+      if elements.length > 0
+        elements
+      else
+        []
+    catch err
       []
 
   first: (selector) =>
