@@ -31,7 +31,7 @@
     ,"mocha": "1.7.x"
   },
   "engines": {
-    "node": "0.8.x"
+    "node": ">=0.6"
   },
   "author": "Peter Graham",
   "license": "BSD"
