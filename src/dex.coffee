@@ -11,10 +11,10 @@ class @Dex
       src: jquery
       done: (err, window) =>
         if err?
-          cb(err, undefined)
+          cb(err, null)
         else
           @$ = window.$
-          cb(undefined, @)
+          cb(null, @)
 
   scrape: (options, cb) ->
     defaults =
@@ -31,8 +31,8 @@ class @Dex
     try
       Dex.prototype.scrape options, (err, res, body) ->
         if err?
-          cb(err, undefined)
+          cb(err, null)
         else
           new Dex(body, cb)
     catch err
-      cb(err, undefined)
+      cb(err, null)

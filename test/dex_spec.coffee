@@ -5,8 +5,8 @@ describe "Dex", =>
     context "with invalid HTML", =>
       it "returns an error", =>
         Dex.build_from_html "", (err, dex) =>
-          expect(err).not.to.equal(undefined)
-          expect(dex).to.equal(undefined)
+          expect(err).not.to.equal(null)
+          expect(dex).to.equal(null)
 
     context "with valid HTML", =>
       beforeEach (done) =>
@@ -21,23 +21,23 @@ describe "Dex", =>
         expect(@dex.$('body').html()).to.equal(Fixtures.html.basic)
 
       it "does not return an error", =>
-        expect(@err).to.equal(undefined)
+        expect(@err).to.equal(null)
 
   describe ".build_from_request", =>
     context "if the URL is invalid", =>
       it "returns an error", =>
         scrapeStub = sinon.stub(Dex.prototype, 'scrape').throws(Error)
         Dex.build_from_request {url: "invalid-url"}, (err, dex) =>
-          expect(err).not.to.equal(undefined)
-          expect(dex).to.equal(undefined)
+          expect(err).not.to.equal(null)
+          expect(dex).to.equal(null)
           scrapeStub.restore()
 
     context "if the URL is unreachable", =>
       it "returns an error", =>
         scrapeStub = sinon.stub(Dex.prototype, 'scrape').yields("an error", {}, null)
         Dex.build_from_request {url: "invalid-url"}, (err, dex) =>
-          expect(err).not.to.equal(undefined)
-          expect(dex).to.equal(undefined)
+          expect(err).not.to.equal(null)
+          expect(dex).to.equal(null)
           scrapeStub.restore()
 
     context "if the URL returns a response", =>
@@ -58,4 +58,4 @@ describe "Dex", =>
         expect(@dex.$('body').html()).to.equal(@html)
 
       it "does not return an error", =>
-        expect(@err).to.equal(undefined)
+        expect(@err).to.equal(null)
