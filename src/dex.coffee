@@ -23,7 +23,7 @@ class @Dex
     try
       @$(selector)
     catch err
-      []
+      @$([])
 
   first: (selector) =>
     elements = @all(selector)

@@ -77,8 +77,9 @@ describe "Dex", =>
         expect(@dex.all("foo").each).to.not.equal(null)
         expect(@dex.all("foo").length).to.equal(0)
 
-      it "returns an empty array for invalid selectors", =>
-        expect(@dex.all("..invalid")).to.eql([])
+      it "returns an empty jQuery result object for invalid selectors", =>
+        expect(@dex.all("..invalid").each).to.not.equal(null)
+        expect(@dex.all("..invalid").length).to.equal(0)
 
     describe "#first", =>
       it "returns the first element that matches the selector", =>
