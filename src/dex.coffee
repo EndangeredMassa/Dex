@@ -6,15 +6,18 @@ jquery = fs.readFileSync("./vendor/jquery.js").toString()
 
 class @Dex
   constructor: (@html, cb) ->
-    jsdom.env
-      html: @html
-      src: jquery
-      done: (err, window) =>
-        if err?
-          cb(err, null)
-        else
-          @$ = window.$
-          cb(null, @)
+    try
+      jsdom.env
+        html: @html
+        src: jquery
+        done: (err, window) =>
+          if err?
+            cb(err, null)
+          else
+            @$ = window.$
+            cb(null, @)
+    catch err
+      cb(err, null)
 
   all: (selector) =>
     try

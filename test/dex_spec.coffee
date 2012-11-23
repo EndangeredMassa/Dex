@@ -8,6 +8,10 @@ describe "Dex", =>
           expect(err).not.to.equal(null)
           expect(dex).to.equal(null)
 
+        Dex.build_from_html undefined, (err, dex) =>
+          expect(err).not.to.equal(null)
+          expect(dex).to.equal(null)
+
     context "with valid HTML", =>
       beforeEach (done) =>
         Dex.build_from_html Fixtures.html.basic, (@err, @dex) =>
