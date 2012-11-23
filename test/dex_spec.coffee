@@ -59,3 +59,29 @@ describe "Dex", =>
 
       it "does not return an error", =>
         expect(@err).to.equal(null)
+
+  describe "finding by selector", =>
+    beforeEach (done) =>
+      Dex.build_from_html Fixtures.html.list, (err, @dex) =>
+        done()
+
+    describe "#all", =>
+      it "returns all elements that match the selector", =>
+        expect(@dex.all("li").length).to.equal(3)
+
+      it "returns an empty array if no element matches the selector", =>
+        expect(@dex.all("foo")).to.eql([])
+
+    describe "#first", =>
+      it "returns the first element that matches the selector", =>
+        expect(@dex.first("li").text()).to.equal("Item #1")
+
+      it "returns null if no element matches the selector", =>
+        expect(@dex.first("foo")).to.equal(null)
+
+    describe "#last", =>
+      it "returns the last element that matches the selector", =>
+        expect(@dex.last("li").text()).to.equal("Item #3")
+
+      it "returns null if no element matches the selector", =>
+        expect(@dex.last("foo")).to.equal(null)

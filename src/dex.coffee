@@ -16,6 +16,27 @@ class @Dex
           @$ = window.$
           cb(null, @)
 
+  all: (selector) =>
+    elements = @$(selector)
+    if elements.length > 0
+      elements
+    else
+      []
+
+  first: (selector) =>
+    elements = @all(selector)
+    if elements.length > 0
+      elements[0..0]
+    else
+      null
+
+  last: (selector) =>
+    elements = @all(selector)
+    if elements.length > 0
+      elements[-1..]
+    else
+      null
+
   scrape: (options, cb) ->
     defaults =
       method: 'GET'
