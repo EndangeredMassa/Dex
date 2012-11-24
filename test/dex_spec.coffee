@@ -101,3 +101,53 @@ describe "Dex", =>
 
       it "returns null if no element matches the selector", =>
         expect(@dex.last("foo")).to.equal(null)
+
+  describe "extracting data by selector and options", =>
+    beforeEach (done) =>
+      @options =
+        innerText: true
+        attributes: ['name', 'class']
+      Dex.build_from_html Fixtures.html.list, (err, @dex) =>
+        done()
+
+    describe "#fromAll", =>
+      it "returns the data from all selectors for the specified options", =>
+        results = @dex.fromAll("li", @options)
+        expect(results.length).to.equal(3)
+        for result in results
+          expect(result.innerText).to.exist
+          for attribute in @options.attributes
+            expect(result[attribute]).to.exist
+
+      it "works with adjacent selectors", (done) =>
+        Dex.build_from_html Fixtures.html.fieldset, (err, dex) =>
+          results = dex.fromAll("label+input", @options)
+          expect(results.length).to.equal(2)
+          for i, result of results
+            expect(result.class).to.equal(["username", "password"][i])
+          done()
+
+      it "returns null for nay nonexistent attributes", =>
+        @options.attributes.push('nonexistent-attr')
+        results = @dex.fromAll("li", @options)
+        expect(results[0]['nonexistent-attr']).to.equal(null)
+
+    describe "#fromFirst", =>
+      it "returns the data from the first selector for the specified options", =>
+        result = @dex.fromFirst("li", @options)
+        expect(result.innerText).to.equal("Item #1")
+        expect(result.name).to.equal("item-1")
+        expect(result.class).to.equal("item")
+
+      it "returns null if no element matches the selector", =>
+        expect(@dex.fromFirst("foo", @options)).to.equal(null)
+
+    describe "#fromLast", =>
+      it "returns the data from the last selector for the specified options", =>
+        result = @dex.fromLast("li", @options)
+        expect(result.innerText).to.equal("Item #3")
+        expect(result.name).to.equal("item-3")
+        expect(result.class).to.equal("item")
+
+      it "returns null if no element matches the selector", =>
+        expect(@dex.fromLast("foo", @options)).to.equal(null)

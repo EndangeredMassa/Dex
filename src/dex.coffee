@@ -1,15 +1,16 @@
 _ = require 'underscore'
 request = require 'request'
 jsdom = require 'jsdom'
+jquery = require 'jquery'
 fs = require("fs")
-jquery = fs.readFileSync("./vendor/jquery.js").toString()
+jquerySrc = fs.readFileSync("./vendor/jquery.js").toString()
 
 class @Dex
   constructor: (@html, cb) ->
     try
       jsdom.env
         html: @html
-        src: jquery
+        src: jquerySrc
         done: (err, window) =>
           if err?
             cb(err, null)
@@ -38,6 +39,29 @@ class @Dex
       elements[-1..]
     else
       null
+
+  fromAll: (selector, options = {}) =>
+    defaults =
+      innerText: false
+      attributes: []
+    options = _.defaults(options, defaults)
+    results = []
+    @all(selector).each (i, element) =>
+      result = {}
+      result.innerText = $.trim($(element).text())  if options.innerText
+      for attribute in options.attributes
+        value = $(element).attr(attribute)
+        value = null  if $.trim(value) == ''
+        result[attribute] = value
+      results.push(result)
+    results
+
+  fromFirst: (selector, options) =>
+    @fromAll(selector, options)[0] || null
+
+  fromLast: (selector, options) =>
+    results = @fromAll(selector, options)
+    results[results.length - 1] || null
 
   scrape: (options, cb) ->
     defaults =

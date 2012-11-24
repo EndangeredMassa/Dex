@@ -12,9 +12,9 @@ global.Fixtures =
     basic: "<h1>Hello <i>world</i></h1>"
     list: "
       <ul>
-        <li>Item #1</li>
-        <li>Item #2</li>
-        <li>Item #3</li>
+        <li name='item-1' class='item'>Item #1</li>
+        <li name='item-2' class='item'>Item #2</li>
+        <li name='item-3' class='item'>Item #3</li>
       </ul>"
     fieldset: "
       <fieldset>
