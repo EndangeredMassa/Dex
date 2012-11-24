@@ -25,3 +25,12 @@ global.Fixtures =
         <label class='password'>Password:</label>
         <input class='password'>
       </fieldset>"
+    articles: "
+      <article title='Article 0'>
+        <h1>Article 0</h1>
+        <a href='/article-0'>Read</a>
+      </article>
+      <article title='Article 1'>
+        <h1>Article 1</h1>
+        <a href='/article-1'>Read</a>
+      </article>"

@@ -40,19 +40,9 @@ class @Dex
       null
 
   fromAll: (selector, options = {}) =>
-    defaults =
-      innerText: false
-      attributes: []
-    options = _.defaults(options, defaults)
     results = []
     @all(selector).each (i, element) =>
-      result = {}
-      result.innerText = $.trim($(element).text())  if options.innerText
-      for attribute in options.attributes
-        value = $(element).attr(attribute)
-        value = null  if $.trim(value) == ''
-        result[attribute] = value
-      results.push(result)
+      results.push(@_result(element, options))
     results
 
   fromFirst: (selector, options) =>
@@ -62,12 +52,47 @@ class @Dex
     results = @fromAll(selector, options)
     results[results.length - 1] || null
 
+  childGroups: (parentSelector = "html", childSelectors = []) =>
+    results = []
+    @all(parentSelector).each (i, element) =>
+      childrenHash = {}
+      for childSelector in childSelectors
+        try
+          $child = @$(element).find(childSelector)
+          childrenHash[childSelector] = $child  if $child.length > 0
+        catch err
+      results.push(childrenHash)
+    @$(results)
+
+  fromChildGroups: (parentSelector, childSelectors, childSelectorOptions = {}) =>
+    results = []
+    @childGroups(parentSelector, childSelectors).each (i, children) =>
+      result = {}
+      for childSelector, $child of children
+        result[childSelector] = @_result($child, childSelectorOptions[childSelector])
+      results.push(result)
+    results
+
   _scrape: (options, cb) ->
     defaults =
       method: 'GET'
       headers:
         'User-Agent': 'Mozilla/5.0 (compatible; Dex; +https://github.com/6/Dex)'
     request _.defaults(options, defaults), cb
+
+  _result: (element, options) =>
+    defaults =
+      innerText: false
+      attributes: []
+    options = _.defaults(options, defaults)
+
+    result = {}
+    result.innerText = $.trim($(element).text())  if options.innerText
+    for attribute in options.attributes
+      value = $(element).attr(attribute)
+      value = null  if $.trim(value) == ''
+      result[attribute] = value
+    result
 
   # TODO - make these methods synchronous if possible
   @build_from_html: (html, cb) ->
