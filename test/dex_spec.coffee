@@ -127,7 +127,12 @@ describe "Dex", =>
             expect(result.class).to.equal(["username", "password"][i])
           done()
 
-      it "returns null for nay nonexistent attributes", =>
+      it "returns null for invalid attributes", =>
+        @options.attributes.push('..invalid-attr')
+        results = @dex.fromAll("li", @options)
+        expect(results[0]['..invalid-attr']).to.equal(null)
+
+      it "returns null for nonexistent attributes", =>
         @options.attributes.push('nonexistent-attr')
         results = @dex.fromAll("li", @options)
         expect(results[0]['nonexistent-attr']).to.equal(null)
