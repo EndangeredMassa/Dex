@@ -81,11 +81,11 @@ describe "Dex", =>
           done()
 
       it "returns an empty jQuery result object if no element matches the selector", =>
-        expect(@dex.all("foo").each).to.not.equal(null)
+        expect(@dex.all("foo").each).to.exist
         expect(@dex.all("foo").length).to.equal(0)
 
       it "returns an empty jQuery result object for invalid selectors", =>
-        expect(@dex.all("..invalid").each).to.not.equal(null)
+        expect(@dex.all("..invalid").each).to.exist
         expect(@dex.all("..invalid").length).to.equal(0)
 
     describe "#first", =>
