@@ -30,7 +30,7 @@ describe "Dex", =>
   describe ".build_from_request", =>
     context "if the URL is invalid", =>
       it "returns an error", =>
-        scrapeStub = sinon.stub(Dex.prototype, 'scrape').throws(Error)
+        scrapeStub = sinon.stub(Dex.prototype, '_scrape').throws(Error)
         Dex.build_from_request {url: "invalid-url"}, (err, dex) =>
           expect(err).not.to.equal(null)
           expect(dex).to.equal(null)
@@ -38,7 +38,7 @@ describe "Dex", =>
 
     context "if the URL is unreachable", =>
       it "returns an error", =>
-        scrapeStub = sinon.stub(Dex.prototype, 'scrape').yields("an error", {}, null)
+        scrapeStub = sinon.stub(Dex.prototype, '_scrape').yields("an error", {}, null)
         Dex.build_from_request {url: "invalid-url"}, (err, dex) =>
           expect(err).not.to.equal(null)
           expect(dex).to.equal(null)
@@ -47,7 +47,7 @@ describe "Dex", =>
     context "if the URL returns a response", =>
       beforeEach (done) =>
         @html = Fixtures.html.basic
-        @scrapeStub = sinon.stub(Dex.prototype, 'scrape').yields(null, {}, @html)
+        @scrapeStub = sinon.stub(Dex.prototype, '_scrape').yields(null, {}, @html)
         Dex.build_from_request {url: "valid-url"}, (@err, @dex) =>
           done()
 

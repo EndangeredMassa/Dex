@@ -62,7 +62,7 @@ class @Dex
     results = @fromAll(selector, options)
     results[results.length - 1] || null
 
-  scrape: (options, cb) ->
+  _scrape: (options, cb) ->
     defaults =
       method: 'GET'
       headers:
@@ -75,7 +75,7 @@ class @Dex
 
   @build_from_request: (options, cb) ->
     try
-      Dex.prototype.scrape options, (err, res, body) ->
+      Dex.prototype._scrape options, (err, res, body) ->
         if err?
           cb(err, null)
         else
