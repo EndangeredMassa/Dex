@@ -1,7 +1,6 @@
 _ = require 'underscore'
 request = require 'request'
 jsdom = require 'jsdom'
-jquery = require 'jquery'
 fs = require("fs")
 jquerySrc = fs.readFileSync("./vendor/jquery.js").toString()
 
