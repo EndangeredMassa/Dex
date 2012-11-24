@@ -73,6 +73,13 @@ describe "Dex", =>
       it "returns all elements that match the selector", =>
         expect(@dex.all("li").length).to.equal(3)
 
+      it "works with adjacent selectors", (done) =>
+        Dex.build_from_html Fixtures.html.fieldset, (err, dex) =>
+          expect(dex.all("label+input").length).to.equal(2)
+          dex.all("label+input").each (i, el) =>
+            expect($(el).attr("class")).to.equal(["username", "password"][i])
+          done()
+
       it "returns an empty jQuery result object if no element matches the selector", =>
         expect(@dex.all("foo").each).to.not.equal(null)
         expect(@dex.all("foo").length).to.equal(0)
