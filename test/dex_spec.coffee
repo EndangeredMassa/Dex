@@ -4,17 +4,17 @@ describe "Dex", =>
   describe ".build_from_html", =>
     context "with invalid HTML", =>
       it "returns an error", =>
-        Dex.build_from_html "", (err, dex) =>
+        Dex.build_from_html {html: "", rules: []}, (err, dex) =>
           expect(err).not.to.equal(null)
           expect(dex).to.equal(null)
 
-        Dex.build_from_html undefined, (err, dex) =>
+        Dex.build_from_html {html: undefined, rules: []}, (err, dex) =>
           expect(err).not.to.equal(null)
           expect(dex).to.equal(null)
 
     context "with valid HTML", =>
       beforeEach (done) =>
-        Dex.build_from_html Fixtures.html.basic, (@err, @dex) =>
+        Dex.build_from_html {html: Fixtures.html.basic, rules: []}, (@err, @dex) =>
           done()
 
       it "returns an instance of Dex with the HTML set", =>
@@ -31,7 +31,7 @@ describe "Dex", =>
     context "if the URL is invalid", =>
       it "returns an error", =>
         scrapeStub = sinon.stub(Dex.prototype, '_scrape').throws(Error)
-        Dex.build_from_request {url: "invalid-url"}, (err, dex) =>
+        Dex.build_from_request {url: "invalid-url", rules: []}, (err, dex) =>
           expect(err).not.to.equal(null)
           expect(dex).to.equal(null)
           scrapeStub.restore()
@@ -39,7 +39,7 @@ describe "Dex", =>
     context "if the URL is unreachable", =>
       it "returns an error", =>
         scrapeStub = sinon.stub(Dex.prototype, '_scrape').yields("an error", {}, null)
-        Dex.build_from_request {url: "invalid-url"}, (err, dex) =>
+        Dex.build_from_request {url: "invalid-url", rules: []}, (err, dex) =>
           expect(err).not.to.equal(null)
           expect(dex).to.equal(null)
           scrapeStub.restore()
@@ -66,7 +66,7 @@ describe "Dex", =>
 
   describe "finding by selector", =>
     beforeEach (done) =>
-      Dex.build_from_html Fixtures.html.list, (err, @dex) =>
+      Dex.build_from_html {html: Fixtures.html.list}, (err, @dex) =>
         done()
 
     describe "#all", =>
@@ -74,7 +74,7 @@ describe "Dex", =>
         expect(@dex.all("li").length).to.equal(3)
 
       it "works with adjacent selectors", (done) =>
-        Dex.build_from_html Fixtures.html.fieldset, (err, dex) =>
+        Dex.build_from_html {html: Fixtures.html.fieldset}, (err, dex) =>
           expect(dex.all("label+input").length).to.equal(2)
           dex.all("label+input").each (i, el) =>
             expect($(el).attr("class")).to.equal(["username", "password"][i])
@@ -107,7 +107,7 @@ describe "Dex", =>
       @options =
         innerText: true
         attributes: ['name', 'class']
-      Dex.build_from_html Fixtures.html.list, (err, @dex) =>
+      Dex.build_from_html {html: Fixtures.html.list}, (err, @dex) =>
         done()
 
     describe "#fromAll", =>
@@ -120,7 +120,7 @@ describe "Dex", =>
             expect(result[attribute]).to.exist
 
       it "works with adjacent selectors", (done) =>
-        Dex.build_from_html Fixtures.html.fieldset, (err, dex) =>
+        Dex.build_from_html {html: Fixtures.html.fieldset}, (err, dex) =>
           results = dex.fromAll("label+input", @options)
           expect(results.length).to.equal(2)
           for i, result of results
@@ -157,57 +157,12 @@ describe "Dex", =>
       it "returns null if no element matches the selector", =>
         expect(@dex.fromLast("foo", @options)).to.equal(null)
 
-  describe "#childGroups", =>
-    beforeEach (done) =>
-      Dex.build_from_html Fixtures.html.articles, (err, @dex) =>
-        done()
+  describe "#asJSON", =>
+    it "returns extraction results as JSON", =>
+      params = Fixtures.apiParams.allParams
+      options =
+        html: Fixtures.html.articles
+        rules: DexRules.build_from_api_params(params)
 
-    it "returns a list of selectors grouped by parent selector", =>
-      childGroups = @dex.childGroups("article", ["h1", "a"])
-      expect(childGroups.length).to.equal(2)
-      childGroups.each (i, children) =>
-        expect(Object.keys(children).length).to.equal(2)
-        expect(children['h1'].text()).to.equal("Article #{i}")
-        expect(children['a'].attr("href")).to.equal("/article-#{i}")
-
-    it "returns an empty jQuery result object for invalid parent selector", =>
-      expect(@dex.childGroups("..invalid", ["h1"]).each).to.exist
-      expect(@dex.childGroups("..invalid", ["h1"]).length).to.equal(0)
-
-    it "returns an empty jQuery result object for nonexistent parent selector", =>
-      expect(@dex.childGroups("nonexistent", ["h1"]).each).to.exist
-      expect(@dex.childGroups("nonexistent", ["h1"]).length).to.equal(0)
-
-    it "does not include invalid child selectors in result", =>
-      @dex.childGroups("article", ["..invalid"]).each (i, children) =>
-        expect(children["..invalid"]).not.to.exist
-
-    it "does not include nonexistent child selectors in result", =>
-      @dex.childGroups("article", ["h2"]).each (i, children) =>
-        expect(children["h2"]).not.to.exist
-
-  describe "#fromChildGroups", =>
-    beforeEach (done) =>
-      @childSelectorOptions =
-        h1:
-          innerText: true
-        a:
-          innerText: true
-          attributes: ["href"]
-
-      Dex.build_from_html Fixtures.html.articles, (err, @dex) =>
-        done()
-
-    it "returns a list of the data for selectors grouped by parent selector", =>
-      results = @dex.fromChildGroups("article", ["h1", "a"], @childSelectorOptions)
-      expect(results.length).to.equal(2)
-      for i, result of results
-        expect(result['h1'].innerText).to.equal("Article #{i}")
-        expect(result['a'].href).to.equal("/article-#{i}")
-        expect(result['a'].innerText).to.equal("Read")
-
-    it "returns an empty array for an invalid parent selector", =>
-      expect(@dex.fromChildGroups("..invalid", ["h1"], @options).length).to.equal(0)
-
-    it "returns an empty array for a nonexistent parent selector", =>
-      expect(@dex.fromChildGroups("nonexistent", ["h1"], @options).length).to.equal(0)
+      Dex.build_from_html options, (err, dex) =>
+        expect(dex.asJSON()).to.eql([Fixtures.json.allParams])

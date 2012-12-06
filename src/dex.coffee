@@ -5,7 +5,7 @@ fs = require("fs")
 jquerySrc = fs.readFileSync("./vendor/jquery.js").toString()
 
 class @Dex
-  constructor: (@html, cb) ->
+  constructor: (@html, @rules, cb) ->
     try
       jsdom.env
         html: @html
@@ -52,26 +52,9 @@ class @Dex
     results = @fromAll(selector, options)
     results[results.length - 1] || null
 
-  childGroups: (parentSelector = "html", childSelectors = []) =>
-    results = []
-    @all(parentSelector).each (i, element) =>
-      childrenHash = {}
-      for childSelector in childSelectors
-        try
-          $child = @$(element).find(childSelector)
-          childrenHash[childSelector] = $child  if $child.length > 0
-        catch err
-      results.push(childrenHash)
-    @$(results)
-
-  fromChildGroups: (parentSelector, childSelectors, childSelectorOptions = {}) =>
-    results = []
-    @childGroups(parentSelector, childSelectors).each (i, children) =>
-      result = {}
-      for childSelector, $child of children
-        result[childSelector] = @_result($child, childSelectorOptions[childSelector])
-      results.push(result)
-    results
+  asJSON: =>
+    @rules.extractAll(@)
+    @rules.asJSON()
 
   _scrape: (options, cb) ->
     defaults =
@@ -95,8 +78,8 @@ class @Dex
     result
 
   # TODO - make these methods synchronous if possible
-  @build_from_html: (html, cb) ->
-    new Dex(html, cb)
+  @build_from_html: (options, cb) ->
+    new Dex(options.html, options.rules, cb)
 
   @build_from_request: (options, cb) ->
     try
@@ -104,6 +87,6 @@ class @Dex
         if err?
           cb(err, null)
         else
-          new Dex(body, cb)
+          new Dex(body, options.rules, cb)
     catch err
       cb(err, null)
