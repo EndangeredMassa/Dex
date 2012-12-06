@@ -87,10 +87,10 @@ class @Dex
     options = _.defaults(options, defaults)
 
     result = {}
-    result.innerText = $.trim($(element).text())  if options.innerText
+    result.innerText = @$.trim(@$(element).text())  if options.innerText
     for attribute in options.attributes
-      value = $(element).attr(attribute)
-      value = null  if $.trim(value) == ''
+      value = @$(element).attr(attribute)
+      value = null  if @$.trim(value) == ''
       result[attribute] = value
     result
 
