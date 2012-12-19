@@ -37,7 +37,7 @@ class @DexServer
       res.send("DexServer is up and running.")
 
     app.get '/api.json', (req, res) =>
-      if 'edit' in req.query
+      if req.query.edit?
         # Render edit API endpoint form
         @handleEditRequest(req.query, res)
       else
@@ -64,6 +64,7 @@ class @DexServer
   #   a[without index]:  <list of attributes> (optional)
   #   r[with index]: <list of child selectors> (optional, can be infinitely nested)
   handleApiRequest: (params, res) =>
+    console.log "API request", params
     url = _.str.trim(params.url)
 
     unless params.r?.length > 0
@@ -79,6 +80,9 @@ class @DexServer
       res.jsonp(200, dex.asJSON())
 
   handleEditRequest: (params, res) =>
-    # TODO render edit an form with pre-filled inputs if applicable
+    delete params.edit
+    title = if Object.keys(params).length > 0 then "Edit API endpoint" else "Build a new API endpoint"
+    console.log title, params
+    res.render 'edit', {title: title}
 
 new @DexServer # TODO remove
