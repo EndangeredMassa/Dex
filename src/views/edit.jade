@@ -8,6 +8,9 @@ block content
     .inner.clearfix
       .url-input-wrap
         input.big(name='url', type='text', placeholder='http://', value=params.url)
-      input.right.lightblue(type="submit", value="Run")
+      input.pink.right.lightblue(type="submit", value="Run &raquo;")
+
+  .preview
+    pre= JSON.stringify(json, null, '  ')
 
 
