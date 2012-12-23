@@ -42,7 +42,7 @@ pre .tex .command,
 pre .tex .special,
 pre .erlang_repl .function_or_atom,
 pre .markdown .header {
-  color: #800;
+  color: #284;
 }
 
 pre .comment,
@@ -64,7 +64,8 @@ pre .go .constant,
 pre .change,
 pre .markdown .bullet,
 pre .markdown .link_url {
-  color: #080;
+  font-weight: 700;
+  color: #00b;
 }
 
 pre .label,
