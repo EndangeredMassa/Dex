@@ -81,7 +81,10 @@ class @DexServer
       if err?
         cb(400, @errorJSON(err))
       else
-        cb(200, dex.asJSON())
+        try
+          cb(200, dex.asJSON())
+        catch err
+          cb(500, @errorJSON("Internal server error."))
 
   errorJSON: (err) =>
     reason = JSON.stringify(err)
