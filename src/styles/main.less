@@ -229,23 +229,17 @@ div.tagsinput span.tag {
   }
 }
 
-.preview-wrap {
-  float: right;
-  width: 50%;
-  h3 {
-    .preview-wrap-text {
-      position: absolute;
-      right:0;
-      top:-2px;
-    }
-  }
-}
-
 .preview {
-  font: 13px/18px monospace;
   overflow:scroll;
   word-wrap:  break-word;
+  position: relative;
+  .preview-wrap-text {
+    position: absolute;
+    top: 4px;
+    right:8px;
+  }
   pre {
+    font: 13px/18px monospace;
     white-space: pre-wrap;
   }
 }
