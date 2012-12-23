@@ -79,6 +79,6 @@ class @DexServer
     delete params.edit
     title = if Object.keys(params).length > 0 then "Edit API endpoint" else "Build a new API endpoint"
     console.log title, params
-    res.render 'edit', {title: title}
+    res.render 'edit', {title: title, params: params}
 
 new @DexServer # TODO remove
