@@ -32,11 +32,7 @@ class @DexServer
     app = express()
     exports.configExpressApp(app)
 
-    app.get '/', (req, res) ->
-      res.setHeader('Content-Type', 'text/plain')
-      res.send("DexServer is up and running.")
-
-    app.get '/api.json', (req, res) =>
+    app.get '/', (req, res) =>
       if req.query.edit?
         # Render edit API endpoint form
         @handleEditRequest(req.query, res)
@@ -44,7 +40,7 @@ class @DexServer
         # Render JSONP API endpoint
         @handleApiRequest(req.query, res)
 
-    app.post '/api.json', (req, res) =>
+    app.post '/', (req, res) =>
       @handleApiRequest(req.params, res)
 
     console.log "Listening on localhost:#{@options.port}"
