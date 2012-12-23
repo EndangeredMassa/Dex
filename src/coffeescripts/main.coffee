@@ -1,5 +1,6 @@
 apiPermalink = =>
-  window.location.search.replace(/edit=[^&]+&?/, "")
+  query = window.location.search.replace(/edit=[^&]+&?/, "")
+  "#{window.location.protocol}//#{window.location.host}/#{query}"
 
 togglePreviewWrapText = (e) =>
   if $('.preview-wrap-text input').is(':checked')
@@ -14,4 +15,4 @@ $ =>
   hljs.highlightBlock($(".preview pre")[0])
   $('.preview-wrap-text input').change(togglePreviewWrapText)
   $(".api-permalink").click =>
-    window.location.search = apiPermalink()
+    window.location.href = apiPermalink()
