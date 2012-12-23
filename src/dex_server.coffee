@@ -70,21 +70,21 @@ class @DexServer
     url = _.str.trim(params.url)
 
     unless params.r?.length > 0
-      cb(400, @errorJSON(url, "No CSS selectors specified."))
+      cb(400, @errorJSON("No CSS selectors specified."))
 
     unless params.url?.match(/^http/)
-      cb(400, @errorJSON(url, "Invalid URL."))
+      cb(400, @errorJSON("Invalid URL."))
 
     rules = DexRules.build_from_api_params(params.r)
 
     Dex.build_from_request {url: url, rules: rules}, (err, dex) =>
       if err?
-        cb(400, @errorJSON(url, err))
+        cb(400, @errorJSON(err))
       else
         cb(200, dex.asJSON())
 
-  errorJSON: (url, err) =>
+  errorJSON: (err) =>
     reason = JSON.stringify(err)
-    {url: url, error: {reason: reason}}
+    {error: {reason: reason}}
 
 new @DexServer # TODO remove
