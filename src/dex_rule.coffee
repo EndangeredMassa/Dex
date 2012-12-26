@@ -36,7 +36,7 @@ class @DexRule
   extractAll: (dex) =>
     @extract(dex)
     for childRule in @childRules
-      childRule.extractAll()
+      childRule.extractAll(dex)
 
   extract: (dex) =>
     options =
