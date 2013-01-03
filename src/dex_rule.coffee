@@ -50,12 +50,13 @@ class @DexRule
   asJSON: =>
     json = {}
     json[@customKey] = @extractedAttributes
-    if @innerText
+    if @innerText?
       json[@customKey].innerText = @extractedInnerText
-    if @childRules?.length > 0
-      json[@customKey].children = {}
+    if @childRules.length > 0
       for childRule in @childRules
-        json[@customKey].children = _.extend(json[@customKey].children, childRule.asJSON())
+        for i, childJSON of childRule.asJSON()
+          console.log 0,0,0,i,1,1,1,childJSON
+          _.extend json[@customKey][i], childJSON
     json
 
   @build_from_api_params: (params, parentSelector) ->

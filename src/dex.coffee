@@ -40,9 +40,19 @@ class @Dex
       null
 
   fromAll: (selector, options = {}) =>
+    _.defaults options,
+      innerText: false
+      attributes: []
+
     results = []
     @all(selector).each (i, element) =>
-      results.push(@_result(element, options))
+      result = {}
+      result.innerText = @$.trim(@$(element).text())  if options.innerText
+      for attribute in options.attributes
+        value = @$(element).attr(attribute)
+        value = null  if @$.trim(value) == ''
+        result[attribute] = value
+      results.push(result)
     results
 
   fromFirst: (selector, options) =>
@@ -62,20 +72,6 @@ class @Dex
       headers:
         'User-Agent': 'Mozilla/5.0 (compatible; Dex; +https://github.com/6/Dex)'
     request _.defaults(options, defaults), cb
-
-  _result: (element, options) =>
-    defaults =
-      innerText: false
-      attributes: []
-    options = _.defaults(options, defaults)
-
-    result = {}
-    result.innerText = @$.trim(@$(element).text())  if options.innerText
-    for attribute in options.attributes
-      value = @$(element).attr(attribute)
-      value = null  if @$.trim(value) == ''
-      result[attribute] = value
-    result
 
   # TODO - make these methods synchronous if possible
   @build_from_html: (options, cb) ->

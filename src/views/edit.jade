@@ -4,8 +4,7 @@ block content
     .logo-wrap
       h1 Dex
       .api-permalink.button.pink Generate API Endpoint
-    .left-form what
-
+    .dd
   section.top-wrap.clearfix
     .inner.clearfix
       .url-input-wrap
@@ -17,5 +16,9 @@ block content
       input(type="checkbox", checked="checked")
       = "Wrap text?"
     pre= JSON.stringify(json, null, '  ')
+
+  .hide
+    // lol
+    textarea.raw-params!= JSON.stringify(params)
 
 
