@@ -2,10 +2,9 @@
   "name": "dex",
   "version": "0.0.1",
   "description": "Parse webpages using CSS selectors",
-  "main": "./src/dex",
+  "main": "./lib/dex",
   "scripts": {
-    "test": "rake test",
-    "prepublish": "coffee -o lib -c src/*.coffee"
+    "install": "coffee -o lib -c src/*.coffee"
   },
   "repository": {
     "type": "git",

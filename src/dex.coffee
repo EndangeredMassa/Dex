@@ -2,7 +2,7 @@ _ = require 'underscore'
 request = require 'request'
 jsdom = require 'jsdom'
 fs = require("fs")
-jquerySrc = fs.readFileSync("./vendor/jquery.js").toString()
+jquerySrc = fs.readFileSync("#{__dirname}/../vendor/jquery.js").toString()
 
 class @Dex
   constructor: (@html, @rules, cb) ->
